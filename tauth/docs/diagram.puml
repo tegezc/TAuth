@@ -1,0 +1,172 @@
+@startuml TAuth_Class_Diagram
+
+skinparam packageStyle rectangle
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+
+package "Core Layer" <<Folder>> {
+  abstract class Failure {
+    + String message
+  }
+  abstract class Exception {
+    + String message
+  }
+  interface FutureUseCase<Type, Params>
+  interface StreamUseCase<Type, Params>
+}
+
+package "Domain Layer (Exported)" <<Folder>> {
+  class AuthUser <<Entity>> {
+    + String uid
+    + String email
+    + String? displayName
+  }
+
+  interface AuthRepository <<Interface>> {
+    + Stream<Either<Failure, AuthUser?>> authStateChanges
+    + Future<Either<Failure, AuthUser>> loginWithEmail(email, password)
+    + Future<Either<Failure, AuthUser>> loginWithGoogle()
+    + Future<Either<Failure, void>> logout()
+  }
+
+  class ObserveAuthStateUseCase implements StreamUseCase
+  class LoginWithEmailUseCase implements FutureUseCase
+  class LoginWithGoogleUseCase implements FutureUseCase
+  class LogoutUseCase implements FutureUseCase
+
+  ObserveAuthStateUseCase --> AuthRepository : uses
+  LoginWithEmailUseCase --> AuthRepository : uses
+  LoginWithGoogleUseCase --> AuthRepository : uses
+  LogoutUseCase --> AuthRepository : uses
+}
+
+package "Data Layer (Hidden/Internal)" <<Folder>> {
+  class AuthUserModel extends AuthUser {
+    + {static} AuthUserModel fromFirebaseUser(User user)
+  }
+
+  interface AuthRemoteDataSource {
+    + Stream<AuthUserModel?> authStateChanges
+    + Future<AuthUserModel> loginWithEmail(email, password)
+    + Future<AuthUserModel> loginWithGoogle()
+    + Future<void> logout()
+  }
+
+  interface AuthLocalDataSource {
+    + Future<void> cacheData(key, value)
+    + Future<void> clearAllData()
+  }
+
+  class AuthRepositoryImpl implements AuthRepository {
+    - AuthRemoteDataSource remote
+    - AuthLocalDataSource local
+  }
+
+  class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
+    - FirebaseAuth firebaseAuth
+    - GoogleSignIn googleSignIn
+  }
+
+  class AuthLocalDataSourceImpl implements AuthLocalDataSource {
+    - FlutterSecureStorage secureStorage
+  }
+
+  AuthRepositoryImpl --> AuthRemoteDataSource
+  AuthRepositoryImpl --> AuthLocalDataSource
+  AuthRemoteDataSourceImpl ..> Exception : throws
+  AuthLocalDataSourceImpl ..> Exception : throws
+  AuthRepositoryImpl ..> Failure : maps exception to
+}
+
+package "Factory (Exported)" <<Folder>> {
+  class TAuthModule {
+    + {static} AuthRepository createRepository(...)
+    + {static} ObserveAuthStateUseCase createObserveUseCase(...)
+    + {static} LoginWithGoogleUseCase createLoginGoogleUseCase(...)
+    + {static} LoginWithEmailUseCase createLoginEmailUseCase(...)
+    + {static} LogoutUseCase createLogoutUseCase(...)
+  }
+}
+
+TAuthModule ..> AuthRepositoryImpl : instantiates
+TAuthModule ..> AuthRemoteDataSourceImpl : instantiates
+TAuthModule ..> AuthLocalDataSourceImpl : instantiates
+
+@enduml
+
+@startuml TAuth_Architecture_Diagram
+
+skinparam componentStyle uml2
+
+actor User
+
+node "TExmp (Aplikasi Utama)" {
+  [AppSessionBloc] <<State Management>>
+  [Login UI] <<Presentation>>
+  [DI Container\n(Injectable)] as DI
+}
+
+cloud "External Libraries" {
+  [FirebaseAuth]
+  [GoogleSignIn]
+  [FlutterSecureStorage]
+}
+
+package "TAuth Package (Headless Module)" {
+
+  interface "TAuth Barrel File (t_auth.dart)" as Barrel
+
+  component "Domain Layer" as Domain #LightGreen {
+    [Entities]
+    [UseCases]
+    [AuthRepository\n(Interface)]
+  }
+
+  component "Data Layer" as Data #LightPink {
+    [AuthRepositoryImpl]
+    [Data Sources]
+    [Models]
+  }
+
+  component "Core Layer" as Core #LightYellow {
+    [Failures]
+    [Exceptions]
+  }
+
+  [TAuthModule\n(Factory)] as Factory #LightBlue
+}
+
+' Flow dari User ke App
+User --> [Login UI] : Interacts
+[Login UI] --> [AppSessionBloc] : Triggers Events
+
+' App menggunakan Barrel file untuk akses Domain
+[AppSessionBloc] --> Barrel : Imports
+Barrel --> Domain : Exposes
+Barrel --> Factory : Exposes
+
+' Injectable mensuplai lib external ke Factory
+DI --> [FirebaseAuth] : gets instance
+DI --> [GoogleSignIn] : gets instance
+DI --> [FlutterSecureStorage] : gets instance
+DI --> Factory : Injects external libs into
+
+' Factory merakit Data Layer
+Factory ..> Data : Assembles (Internal)
+
+' Data layer mengimplementasikan Domain
+Data -up-|> Domain : Implements
+
+' Data layer menggunakan external lib (via injection)
+Data --> [FirebaseAuth] : uses
+Data --> [GoogleSignIn] : uses
+Data --> [FlutterSecureStorage] : uses
+
+' Note untuk strict rule
+note right of Data
+  **HIDDEN FROM TEXMP**
+  TExmp cannot import anything
+  from this layer directly.
+end note
+
+@enduml
