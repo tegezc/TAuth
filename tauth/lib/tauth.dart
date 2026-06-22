@@ -11,3 +11,8 @@ export 'src/domain/usecases/login_with_email.dart';
 export 'src/domain/usecases/login_with_google.dart'; // <-- EXPORT BARU
 export 'src/domain/usecases/logout.dart';
 export 'src/domain/usecases/observe_auth_state.dart';
+
+// Export Factory (Inversion of Control)
+export 'src/t_auth_module.dart';
+
+export 'src/domain/repositories/i_auth_repository.dart';

@@ -1,19 +1,19 @@
 // lib/src/core/error/failures.dart
 import 'package:equatable/equatable.dart';
 
-abstract class Failure extends Equatable {
+abstract class TAuthFailure extends Equatable {
   final String message;
 
-  const Failure(this.message);
+  const TAuthFailure(this.message);
 
   @override
   List<Object> get props => [message];
 }
 
-class AuthFailure extends Failure {
-  const AuthFailure(super.message);
+class TAuthServerFailure extends TAuthFailure {
+  const TAuthServerFailure(super.message);
 }
 
-class CacheFailure extends Failure {
-  const CacheFailure(super.message);
+class TAuthCacheFailure extends TAuthFailure {
+  const TAuthCacheFailure(super.message);
 }

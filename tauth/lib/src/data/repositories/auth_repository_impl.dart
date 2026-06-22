@@ -7,7 +7,7 @@ import '../../domain/repositories/i_auth_repository.dart';
 import '../datasources/auth_local_data_source.dart';
 import '../datasources/auth_remote_datasource.dart';
 
-class AuthRepositoryImpl implements AuthRepository {
+class AuthRepositoryImpl implements TAuthRepository {
   final AuthRemoteDataSource remoteDataSource;
   final AuthLocalDataSource localDataSource;
 
@@ -17,54 +17,54 @@ class AuthRepositoryImpl implements AuthRepository {
   });
 
   @override
-  Stream<Either<Failure, AuthUser?>> get authStateChanges {
-    return remoteDataSource.authStateChanges.map<Either<Failure, AuthUser?>>((userModel) {
+  Stream<Either<TAuthFailure, TAuthUser?>> get authStateChanges {
+    return remoteDataSource.authStateChanges.map<Either<TAuthFailure, TAuthUser?>>((userModel) {
       // Karena AuthUserModel adalah extends dari AuthUser (Polymorphism),
       // kita bisa langsung mengirimnya ke Right()
       return Right(userModel);
     }).handleError((error) {
       // Mencegah aplikasi crash jika stream Firebase tiba-tiba error
-      return Left(AuthFailure('Gagal mendengarkan status otentikasi.'));
+      return Left(TAuthServerFailure('Gagal mendengarkan status otentikasi.'));
     });
   }
 
   @override
-  Future<Either<Failure, AuthUser>> loginWithEmail(String email, String password) async {
+  Future<Either<TAuthFailure, TAuthUser>> loginWithEmail(String email, String password) async {
     try {
       final userModel = await remoteDataSource.loginWithEmail(email, password);
       return Right(userModel);
     } on ServerException catch (e) {
-      return Left(AuthFailure(e.message));
+      return Left(TAuthServerFailure(e.message));
     } catch (e) {
-      return Left(const AuthFailure('Terjadi kesalahan sistem.'));
+      return Left(const TAuthServerFailure('Terjadi kesalahan sistem.'));
     }
   }
 
   @override
-  Future<Either<Failure, AuthUser>> loginWithGoogle() async {
+  Future<Either<TAuthFailure, TAuthUser>> loginWithGoogle() async {
     try {
       final userModel = await remoteDataSource.loginWithGoogle();
       return Right(userModel);
     } on ServerException catch (e) {
-      return Left(AuthFailure(e.message));
+      return Left(TAuthServerFailure(e.message));
     } catch (e) {
-      return Left(const AuthFailure('Terjadi kesalahan sistem.'));
+      return Left(const TAuthServerFailure('Terjadi kesalahan sistem.'));
     }
   }
 
   @override
-  Future<Either<Failure, void>> logout() async {
+  Future<Either<TAuthFailure, void>> logout() async {
     try {
       await remoteDataSource.logout();
       // Pastikan membersihkan data cache lokal saat user logout
       await localDataSource.clearAllData();
       return const Right(null);
     } on ServerException catch (e) {
-      return Left(AuthFailure(e.message));
+      return Left(TAuthServerFailure(e.message));
     } on CacheException catch (e) {
-      return Left(CacheFailure(e.message));
+      return Left(TAuthCacheFailure(e.message));
     } catch (e) {
-      return Left(const AuthFailure('Terjadi kesalahan saat logout.'));
+      return Left(const TAuthServerFailure('Terjadi kesalahan saat logout.'));
     }
   }
 }

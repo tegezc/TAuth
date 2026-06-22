@@ -2,7 +2,7 @@
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
 import '../../domain/entities/auth_user.dart';
 
-class AuthUserModel extends AuthUser {
+class AuthUserModel extends TAuthUser {
   const AuthUserModel({
     required super.uid,
     required super.email,

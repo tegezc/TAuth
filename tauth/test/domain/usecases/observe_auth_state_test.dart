@@ -14,17 +14,17 @@ void main() {
     useCase = ObserveAuthStateUseCase(mockRepository);
   });
 
-  const tAuthUser = AuthUser(uid: '123', email: 'stream@email.com');
+  const tAuthUser = TAuthUser(uid: '123', email: 'stream@email.com');
 
   test('harus mengembalikan Stream dari repository authStateChanges', () {
     // Arrange
     // Kita buat dummy stream yang memancarkan 1 event user
-    final Stream<Either<Failure, AuthUser?>> tStream = Stream.value(const Right(tAuthUser));
+    final Stream<Either<TAuthFailure, TAuthUser?>> tStream = Stream.value(const Right(tAuthUser));
 
     when(() => mockRepository.authStateChanges).thenAnswer((_) => tStream);
 
     // Act
-    final result = useCase(NoParams());
+    final result = useCase(TAuthNoParams());
 
     // Assert
     expect(result, equals(tStream));

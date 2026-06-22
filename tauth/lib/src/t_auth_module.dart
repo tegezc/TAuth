@@ -17,7 +17,7 @@ import 'domain/usecases/observe_auth_state.dart';
 class TAuthModule {
 
   /// Membuat instance AuthRepository yang sudah dirakit lengkap
-  static AuthRepository createRepository({
+  static TAuthRepository createRepository({
     required FirebaseAuth firebaseAuth,
     required GoogleSignIn googleSignIn,
     required FlutterSecureStorage secureStorage,
@@ -39,8 +39,8 @@ class TAuthModule {
   }
 
   // (Opsional) Factory untuk UseCases jika ingin lebih rapi
-  static ObserveAuthStateUseCase createObserveUseCase(AuthRepository repo) => ObserveAuthStateUseCase(repo);
-  static LoginWithGoogleUseCase createLoginGoogleUseCase(AuthRepository repo) => LoginWithGoogleUseCase(repo);
-  static LoginWithEmailUseCase createLoginEmailUseCase(AuthRepository repo) => LoginWithEmailUseCase(repo);
-  static LogoutUseCase createLogoutUseCase(AuthRepository repo) => LogoutUseCase(repo);
+  static ObserveAuthStateUseCase createObserveUseCase(TAuthRepository repo) => ObserveAuthStateUseCase(repo);
+  static LoginWithGoogleUseCase createLoginGoogleUseCase(TAuthRepository repo) => LoginWithGoogleUseCase(repo);
+  static LoginWithEmailUseCase createLoginEmailUseCase(TAuthRepository repo) => LoginWithEmailUseCase(repo);
+  static LogoutUseCase createLogoutUseCase(TAuthRepository repo) => LogoutUseCase(repo);
 }

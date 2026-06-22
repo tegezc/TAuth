@@ -14,7 +14,7 @@ void main() {
     useCase = LoginWithGoogleUseCase(mockRepository);
   });
 
-  const tAuthUser = AuthUser(uid: '123', email: 'google@email.com', displayName: 'Google User');
+  const tAuthUser = TAuthUser(uid: '123', email: 'google@email.com', displayName: 'Google User');
 
   test('harus memanggil fungsi loginWithGoogle dari repository', () async {
     // Arrange
@@ -23,7 +23,7 @@ void main() {
 
     // Act
     // Karena menggunakan NoParams, kita lempar instance NoParams()
-    final result = await useCase(NoParams());
+    final result = await useCase(TAuthNoParams());
 
     // Assert
     expect(result, const Right(tAuthUser));

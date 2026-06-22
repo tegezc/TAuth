@@ -49,7 +49,7 @@ void main() {
       final result = await repository.loginWithEmail(tEmail, tPassword);
 
       // Assert
-      expect(result, equals(const Left(AuthFailure('Password salah'))));
+      expect(result, equals(const Left(TAuthServerFailure('Password salah'))));
     });
   });
 

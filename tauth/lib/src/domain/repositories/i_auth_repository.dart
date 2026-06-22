@@ -3,15 +3,15 @@ import 'package:dartz/dartz.dart';
 import '../../core/error/failures.dart';
 import '../entities/auth_user.dart';
 
-abstract class AuthRepository {
+abstract class TAuthRepository {
   /// Stream reaktif untuk mendengarkan perubahan status login (Login/Logout)
-  Stream<Either<Failure, AuthUser?>> get authStateChanges;
+  Stream<Either<TAuthFailure, TAuthUser?>> get authStateChanges;
 
   /// Aksi untuk login menggunakan Email dan Password
-  Future<Either<Failure, AuthUser>> loginWithEmail(String email, String password);
+  Future<Either<TAuthFailure, TAuthUser>> loginWithEmail(String email, String password);
 
-  Future<Either<Failure, AuthUser>> loginWithGoogle();
+  Future<Either<TAuthFailure, TAuthUser>> loginWithGoogle();
 
   /// Aksi untuk mengakhiri sesi
-  Future<Either<Failure, void>> logout();
+  Future<Either<TAuthFailure, void>> logout();
 }

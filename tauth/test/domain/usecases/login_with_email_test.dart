@@ -16,7 +16,7 @@ void main() {
 
   const tEmail = 'test@email.com';
   const tPassword = 'password123';
-  const tAuthUser = AuthUser(uid: '123', email: tEmail);
+  const tAuthUser = TAuthUser(uid: '123', email: tEmail);
 
   test('harus memanggil fungsi loginWithEmail dari repository', () async {
     // Arrange

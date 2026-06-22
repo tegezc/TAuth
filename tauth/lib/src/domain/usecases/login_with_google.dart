@@ -4,13 +4,13 @@ import '../../core/usecases/usecase.dart';
 import '../entities/auth_user.dart';
 import '../repositories/i_auth_repository.dart';
 
-class LoginWithGoogleUseCase implements FutureUseCase<AuthUser, NoParams> {
-  final AuthRepository repository;
+class LoginWithGoogleUseCase implements TAuthFutureUseCase<TAuthUser, TAuthNoParams> {
+  final TAuthRepository repository;
 
   LoginWithGoogleUseCase(this.repository);
 
   @override
-  Future<Either<Failure, AuthUser>> call(NoParams params) async {
+  Future<Either<TAuthFailure, TAuthUser>> call(TAuthNoParams params) async {
     return await repository.loginWithGoogle();
   }
 }

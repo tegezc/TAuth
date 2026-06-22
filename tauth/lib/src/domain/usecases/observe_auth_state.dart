@@ -5,13 +5,13 @@ import '../../core/usecases/usecase.dart';
 import '../entities/auth_user.dart';
 import '../repositories/i_auth_repository.dart';
 
-class ObserveAuthStateUseCase implements StreamUseCase<AuthUser?, NoParams> {
-  final AuthRepository repository;
+class ObserveAuthStateUseCase implements TAuthStreamUseCase<TAuthUser?, TAuthNoParams> {
+  final TAuthRepository repository;
 
   ObserveAuthStateUseCase(this.repository);
 
   @override
-  Stream<Either<Failure, AuthUser?>> call(NoParams params) {
+  Stream<Either<TAuthFailure, TAuthUser?>> call(TAuthNoParams params) {
     return repository.authStateChanges;
   }
 }

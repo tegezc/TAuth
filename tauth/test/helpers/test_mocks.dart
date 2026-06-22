@@ -19,4 +19,4 @@ class MockFlutterSecureStorage extends Mock implements FlutterSecureStorage {}
 // Mocks untuk Internal Layers
 class MockAuthRemoteDataSource extends Mock implements AuthRemoteDataSource {}
 class MockAuthLocalDataSource extends Mock implements AuthLocalDataSource {}
-class MockAuthRepository extends Mock implements AuthRepository {}
+class MockAuthRepository extends Mock implements TAuthRepository {}

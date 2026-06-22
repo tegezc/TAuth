@@ -20,7 +20,7 @@ void main() {
         .thenAnswer((_) async => const Right(null));
 
     // Act
-    final result = await useCase(NoParams());
+    final result = await useCase(TAuthNoParams());
 
     // Assert
     expect(result, const Right(null));

@@ -6,13 +6,13 @@ import '../../core/usecases/usecase.dart';
 import '../entities/auth_user.dart';
 import '../repositories/i_auth_repository.dart';
 
-class LoginWithEmailUseCase implements FutureUseCase<AuthUser, LoginParams> {
-  final AuthRepository repository;
+class LoginWithEmailUseCase implements TAuthFutureUseCase<TAuthUser, LoginParams> {
+  final TAuthRepository repository;
 
   LoginWithEmailUseCase(this.repository);
 
   @override
-  Future<Either<Failure, AuthUser>> call(LoginParams params) async {
+  Future<Either<TAuthFailure, TAuthUser>> call(LoginParams params) async {
     return await repository.loginWithEmail(params.email, params.password);
   }
 }
