@@ -6,6 +6,7 @@ import '../../core/usecases/usecase.dart';
 import '../entities/auth_user.dart';
 import '../repositories/i_auth_repository.dart';
 
+/// UseCase untuk mengeksekusi aksi Login menggunakan Email dan Password.
 class LoginWithEmailUseCase implements TAuthFutureUseCase<TAuthUser, LoginParams> {
   final TAuthRepository repository;
 
@@ -17,6 +18,7 @@ class LoginWithEmailUseCase implements TAuthFutureUseCase<TAuthUser, LoginParams
   }
 }
 
+/// Objek parameter yang mewajibkan input [email] dan [password] untuk [LoginWithEmailUseCase].
 class LoginParams extends Equatable {
   final String email;
   final String password;

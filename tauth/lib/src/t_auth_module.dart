@@ -1,4 +1,4 @@
-// file: lib/src/t_auth_module.dart (Di dalam package TAuth)
+// file: lib/src/t_auth_module.dart
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -12,11 +12,13 @@ import 'domain/usecases/login_with_google.dart';
 import 'domain/usecases/logout.dart';
 import 'domain/usecases/observe_auth_state.dart';
 
-/// Kelas Factory ini adalah SATU-SATUNYA tempat di mana
-/// aplikasi luar bisa meminta instance dari TAuth.
+/// Gerbang perakitan (Factory / Composition Root) untuk modul TAuth.
+/// Kelas ini mengeksekusi Inversion of Control (IoC), memungkinkan aplikasi utama
+/// merakit Data Layer tanpa perlu mengekspos kode internal implementasinya.
 class TAuthModule {
 
-  /// Membuat instance AuthRepository yang sudah dirakit lengkap
+  /// Merakit [TAuthRepository] dengan menyuntikkan dependensi eksternal (Firebase, Storage).
+  /// Wajib dipanggil oleh Dependency Injection container di aplikasi utama (contoh: GetIt/Injectable).
   static TAuthRepository createRepository({
     required FirebaseAuth firebaseAuth,
     required GoogleSignIn googleSignIn,
@@ -38,9 +40,15 @@ class TAuthModule {
     );
   }
 
-  // (Opsional) Factory untuk UseCases jika ingin lebih rapi
+  /// Membungkus [TAuthRepository] ke dalam [ObserveAuthStateUseCase].
   static ObserveAuthStateUseCase createObserveUseCase(TAuthRepository repo) => ObserveAuthStateUseCase(repo);
+  
+  /// Membungkus [TAuthRepository] ke dalam [LoginWithGoogleUseCase].
   static LoginWithGoogleUseCase createLoginGoogleUseCase(TAuthRepository repo) => LoginWithGoogleUseCase(repo);
+  
+  /// Membungkus [TAuthRepository] ke dalam [LoginWithEmailUseCase].
   static LoginWithEmailUseCase createLoginEmailUseCase(TAuthRepository repo) => LoginWithEmailUseCase(repo);
+  
+  /// Membungkus [TAuthRepository] ke dalam [LogoutUseCase].
   static LogoutUseCase createLogoutUseCase(TAuthRepository repo) => LogoutUseCase(repo);
 }
