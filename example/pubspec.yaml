@@ -1,0 +1,21 @@
+# file: example/pubspec.yaml
+name: example
+description: Contoh implementasi TAuth Module.
+publish_to: 'none'
+version: 1.0.0
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # Panggil package buatan kita sendiri
+  tauth:
+    path: ../
+
+  # Dependencies tambahan untuk UI dan State Management
+  flutter_bloc: ^8.1.3
+  get_it: ^7.6.4
+  firebase_core: ^4.11.0
+  injectable: ^2.6.0
