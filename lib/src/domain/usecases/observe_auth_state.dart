@@ -7,7 +7,7 @@ import '../repositories/i_auth_repository.dart';
 
 /// UseCase reaktif yang mendengarkan (listen) perubahan status otentikasi.
 /// Mengembalikan stream [TAuthUser] jika pengguna terotentikasi, atau [null] jika sesi berakhir/kosong.
-/// Gunakan UseCase ini di AppSessionBloc untuk mengendalikan routing aplikasi secara real-time.
+/// Gunakan UseCase ini di Bloc untuk mengendalikan routing aplikasi secara real-time.
 class ObserveAuthStateUseCase implements TAuthStreamUseCase<TAuthUser?, TAuthNoParams> {
   final TAuthRepository repository;
 
