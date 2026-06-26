@@ -1,0 +1,98 @@
+{
+  "project_info": {
+    "project_number": "774229332633",
+    "project_id": "devonly-292406",
+    "storage_bucket": "devonly-292406.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:774229332633:android:379e3bcff208225f311e08",
+        "android_client_info": {
+          "package_name": "com.example.researchfirebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "774229332633-o2tmapqlju19k3jgepvfq70ckurfd2hi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.researchfirebase",
+            "certificate_hash": "9f2c7df6a21819068e38b11ba92bfa95ac1eb23b"
+          }
+        },
+        {
+          "client_id": "774229332633-u48k97gvhav1hug31agtkka4ga2via62.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDs5OtnT5iumDV7Zw41NzYkvaJhxDoSK7g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "774229332633-u48k97gvhav1hug31agtkka4ga2via62.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "774229332633-e9jjd2bp7e27fe9o0pv85u2l1bue52vh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.researchfirebase"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:774229332633:android:523acda02e8f4a31311e08",
+        "android_client_info": {
+          "package_name": "com.tegez.exm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "774229332633-1qs2gkltnopd9pnmuk5gvg370aabag6n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tegez.exm",
+            "certificate_hash": "9f2c7df6a21819068e38b11ba92bfa95ac1eb23b"
+          }
+        },
+        {
+          "client_id": "774229332633-u48k97gvhav1hug31agtkka4ga2via62.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDs5OtnT5iumDV7Zw41NzYkvaJhxDoSK7g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "774229332633-u48k97gvhav1hug31agtkka4ga2via62.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "774229332633-e9jjd2bp7e27fe9o0pv85u2l1bue52vh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.researchfirebase"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
