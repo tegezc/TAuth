@@ -1,0 +1,45 @@
+# TAuth Package - Cursor AI Developer Guidelines
+
+## 1. System Architecture & Identity
+- **Identity:** This is `TAuth`, a headless Flutter authentication package. It contains NO UI, NO Widgets, and NO State Management (BLoC/Riverpod).
+- **Architecture:** STRICT Clean Architecture.
+- **Dependency Rule:** The Data layer depends on the Domain layer. The Domain layer is completely independent and has NO external dependencies other than `dartz` and `equatable`.
+- **Composition Root:** The internal Data layer is assembled via `TAuthModule` (Factory pattern).
+
+## 2. Strict Constraints (CRITICAL)
+1. **Never Expose Data Layer:** DO NOT export anything from `src/data/` inside the barrel file (`lib/t_auth.dart`). The main app must not know about `AuthRepositoryImpl` or any DataSources.
+2. **No Dependency Injection Frameworks:** DO NOT use `get_it`, `injectable`, or `provider` inside this package. Use pure Constructor Injection.
+3. **Naming Conventions:** All core base classes are prefixed with `TAuth` to prevent namespace collisions in the main app (e.g., `TAuthFailure`, `TAuthServerFailure`, `TAuthFutureUseCase`, `TAuthStreamUseCase`, `TAuthNoParams`).
+4. **Functional Error Handling:** NEVER throw raw exceptions from the Domain layer or UseCases. Every UseCase and Repository method MUST return `Future<Either<TAuthFailure, Type>>` or `Stream<Either<TAuthFailure, Type>>` using the `dartz` package.
+5. **Data Layer Mapping:** DataSources (Remote/Local) are allowed to throw `Exception` (e.g., `ServerException`). However, `AuthRepositoryImpl` MUST catch these exceptions and map them to `Left(TAuthServerFailure(...))` or similar `TAuthFailure` subclasses.
+
+## 3. Directory Structure Mapping
+- `lib/src/core/`: Contains base usecases and failures (`TAuthFailure`, `TAuthNoParams`).
+- `lib/src/domain/entities/`: Pure data classes extending `Equatable` (e.g., `AuthUser`). NO JSON serialization here.
+- `lib/src/domain/repositories/`: Abstract contracts (Interfaces).
+- `lib/src/domain/usecases/`: Business logic executors. Must implement `TAuthFutureUseCase` or `TAuthStreamUseCase`.
+- `lib/src/data/models/`: Data classes with JSON serialization/deserialization methods (e.g., `fromFirebaseUser`).
+- `lib/src/data/datasources/`: Interfaces and Implementations for external APIs (Firebase, Google SignIn, Secure Storage).
+- `lib/src/data/repositories/`: The Implementation of Domain Repositories. Acts as the error-catching and mapping bridge.
+- `lib/src/t_auth_module.dart`: The Factory class used by the main app to assemble the Repository and UseCases.
+
+## 4. Standard Workflow for Adding a New Feature
+When asked to create a new authentication feature (e.g., "Add Reset Password"), follow this exact sequence:
+
+### Step 1: Domain Layer (Contract)
+- Add the method signature to `lib/src/domain/repositories/auth_repository.dart`.
+- Create a new UseCase in `lib/src/domain/usecases/`. Use `TAuthNoParams` if it requires no arguments.
+
+### Step 2: Data Layer (Implementation)
+- Add the method signature to the relevant DataSource interface.
+- Implement the actual logic in the DataSource implementation (throw exceptions if failed).
+- Implement the method in `lib/src/data/repositories/auth_repository_impl.dart`. Call the DataSource, catch exceptions, and return `Right(data)` or `Left(TAuthFailure)`.
+
+### Step 3: Factory & Export
+- Create a static helper method in `lib/src/t_auth_module.dart` to instantiate the new UseCase.
+- Export the new UseCase file in `lib/t_auth.dart`.
+
+## 5. Code Style & Documentation
+- Write standard Dart DocComments (`///`) for all public classes, methods, and properties.
+- Prefer `final` for variables.
+- Always use `const` constructors where possible to optimize memory.
